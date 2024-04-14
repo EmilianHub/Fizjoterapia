@@ -33,14 +33,14 @@ class PromptService {
         val builder: AlertDialog.Builder = AlertDialog.Builder(activity)
         val alertDialog: AlertDialog = builder.setMessage(message)
             .setCancelable(false)
-            .setPositiveButton("Yes") { dialogInterface, i ->
+            .setPositiveButton("Yes") { _, _ ->
                 try {
                     positiveAction.call()
                 } catch (e: Exception) {
                     throw RuntimeException(e)
                 }
             }
-            .setNegativeButton("No") { dialogInterface, i ->
+            .setNegativeButton("No") { _, _ ->
                 try {
                     negative.call()
                 } catch (e: Exception) {
@@ -48,11 +48,5 @@ class PromptService {
                 }
             }.create()
         alertDialog.show()
-    }
-
-    companion object {
-        val instance:PromptService by lazy {
-            PromptService()
-        }
     }
 }

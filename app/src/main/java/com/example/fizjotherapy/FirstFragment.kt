@@ -9,10 +9,13 @@ import android.view.ViewGroup
 import android.widget.DatePicker
 import android.widget.EditText
 import android.widget.TimePicker
+import androidx.core.text.set
 import androidx.fragment.app.Fragment
 import com.example.fizjotherapy.databinding.FragmentFirstBinding
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
+import java.util.Locale
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -70,13 +73,15 @@ class FirstFragment : Fragment(), DatePickerDialog.OnDateSetListener,
             val month = c.get(Calendar.MONTH)
             val day = c.get(Calendar.DAY_OF_MONTH)
 
-            DatePickerDialog(
+            val datePickerDialog = DatePickerDialog(
                 requireContext(),
                 this,
                 year,
                 month,
                 day
-            ).show()
+            )
+            datePickerDialog.datePicker.minDate = System.currentTimeMillis() - 1000
+            datePickerDialog.show()
         }
     }
 
@@ -98,9 +103,16 @@ class FirstFragment : Fragment(), DatePickerDialog.OnDateSetListener,
     }
 
     override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
+        val inputFormat = DateTimeFormatter.ofPattern("dd-M-yyyy H:mm", Locale("pl"))
+        val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss", Locale("pl"))
         savedHour = hourOfDay
         savedMinute = minute
 
-        savedAppointmentDate = "$savedDay-$savedMonth-$savedYear $savedHour:$savedMinute"
+        val date = LocalDateTime.parse(
+            "$savedDay-$savedMonth-$savedYear $savedHour:$savedMinute",
+            inputFormat
+        )
+        savedAppointmentDate = formatter.format(date).toString()
+        editTextAppointmentDate?.setText(savedAppointmentDate)
     }
 }

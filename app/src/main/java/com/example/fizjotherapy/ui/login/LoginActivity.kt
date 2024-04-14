@@ -5,12 +5,9 @@ import android.os.Bundle
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
-import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
-import com.example.fizjotherapy.DTO.Users
+import com.example.fizjotherapy.dto.Users
 import com.example.fizjotherapy.MainActivity
-import com.example.fizjotherapy.R
 import com.example.fizjotherapy.boundry.GlobalUser
 import com.example.fizjotherapy.control.UsersService
 import com.example.fizjotherapy.databinding.ActivityLoginBinding
@@ -20,13 +17,15 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
     private lateinit var userService: UsersService
-    private lateinit var promptService: PromptService
+    private var promptService: PromptService = PromptService()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        userService = UsersService(applicationContext)
 
         val username = binding.username
         val password = binding.password
@@ -43,7 +42,7 @@ class LoginActivity : AppCompatActivity() {
             }
         }
 
-        loginButton?.setOnClickListener {
+        loginButton.setOnClickListener {
             tryLogin(username, password, errorView)
         }
     }
