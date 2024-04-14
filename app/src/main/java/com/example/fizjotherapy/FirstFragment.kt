@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.DatePicker
 import android.widget.EditText
 import android.widget.TimePicker
-import androidx.core.text.set
 import androidx.fragment.app.Fragment
 import com.example.fizjotherapy.databinding.FragmentFirstBinding
 import java.time.LocalDateTime
