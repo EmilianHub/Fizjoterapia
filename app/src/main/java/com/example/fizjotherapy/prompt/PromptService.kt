@@ -8,7 +8,7 @@ import android.widget.TextView
 import android.widget.Toast
 import java.util.concurrent.Callable
 
-class PromptService {
+class PromptService(private val context: Context) {
 
     fun setErrorTextView(errorView: TextView, text: String?, color: String?, visible: Int) {
         errorView.text = text
@@ -16,12 +16,12 @@ class PromptService {
         errorView.visibility = visible
     }
 
-    fun showSuccessToast(applicationContext: Context?, message: String?) {
-        Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
+    fun showSuccessToast(message: String?) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 
-    fun showFailToast(applicationContext: Context?, message: String?) {
-        Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
+    fun showFailToast(message: String?) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 
     fun buildAlertDialog(

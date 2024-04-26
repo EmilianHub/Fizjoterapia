@@ -17,23 +17,28 @@
         android:textStyle="bold"
         android:layout_marginBottom="16dp"/>
 
-    <EditText
-        android:id="@+id/editTextFirstName"
+    <CheckBox
+        android:id="@+id/useSameData"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/white"
-        android:hint="Imię"
+        android:text="@string/dane_checkbox" />
+
+    <EditText
+        android:id="@+id/editTextPatientName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:hint="Imię i Nazwisko"
         android:inputType="textPersonName"
         android:layout_marginBottom="8dp"/>
 
-    <EditText
-        android:id="@+id/editTextLastName"
+    <Spinner
+        android:id="@+id/editTextDocName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/white"
-        android:hint="Nazwisko"
-        android:inputType="textPersonName"
-        android:layout_marginBottom="8dp"/>
+        android:layout_marginVertical="10dp"/>
 
     <EditText
         android:id="@+id/editTextDateOfBirth"

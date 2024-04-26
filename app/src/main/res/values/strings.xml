@@ -57,4 +57,19 @@
     <string name="username_label">Nazwa użytkownika</string>
     <string name="home">Strona Główna</string>
     <string name="nav_header_title">Menu</string>
+    <string name="zarejestruj_sie">Zarejestruj się</string>
+    <string name="confirm_password">Potwierdź hasło</string>
+    <string name="username_already_exists">Użytkownik już istnieje</string>
+    <string name="empty_filed_text">Pole nie może być puste</string>
+    <string name="username_requirements">Nazwa za krótka</string>
+    <string name="not_matching_password">Hasła nie są takie same</string>
+    <string name="incorrect_email_error_text">Nieprawidłowy email</string>
+    <string name="email_error_text">email nie może być pusty</string>
+    <string name="strong_password_text">Silne hasło</string>
+    <string name="short_password_text">Za krótkie hasło</string>
+    <string name="empty_password_text">Hasło nie może być puste</string>
+    <string name="name_to_reg">Imię i Nazwisko</string>
+    <string name="numer_telefonu">Numer telefonu</string>
+    <string name="dane_checkbox">Użyj tych samych danych użytkownika</string>
+    <string name="data_urodzenia">Data urodzenia</string>
 </resources>

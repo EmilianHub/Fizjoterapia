@@ -1,23 +1,25 @@
 package com.example.fizjotherapy.ui.login
 
-import android.content.Intent
 import android.os.Bundle
-import android.view.inputmethod.EditorInfo
-import android.widget.EditText
-import android.widget.TextView
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import com.example.fizjotherapy.dto.Users
-import com.example.fizjotherapy.MainActivity
-import com.example.fizjotherapy.boundry.GlobalUser
-import com.example.fizjotherapy.control.UsersService
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.navigateUp
+import androidx.navigation.ui.setupActionBarWithNavController
+import com.example.fizjotherapy.R
+import com.example.fizjotherapy.boundry.DbHelper
 import com.example.fizjotherapy.databinding.ActivityLoginBinding
-import com.example.fizjotherapy.prompt.PromptService
 
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
-    private lateinit var userService: UsersService
-    private var promptService: PromptService = PromptService()
+    private lateinit var appBarConfiguration: AppBarConfiguration
+    private lateinit var drawerLayout : DrawerLayout
+    private lateinit var navController : NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,43 +27,35 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        userService = UsersService(applicationContext)
+        DbHelper(applicationContext)
 
-        val username = binding.username
-        val password = binding.password
-        val loginButton = binding.loginButton
-        val errorView = binding.loginError
+        val toolbar = binding.appBarLogin.toolbar
+        setSupportActionBar(toolbar)
 
-        password.apply {
-            setOnEditorActionListener { _, actionId, _ ->
-                when (actionId) {
-                    EditorInfo.IME_ACTION_DONE ->
-                        tryLogin(username, password, errorView)
-                }
-                false
-            }
-        }
+        drawerLayout = binding.drawerLayoutLogin
 
-        loginButton.setOnClickListener {
-            tryLogin(username, password, errorView)
+        navController = findNavController(R.id.nav_host_fragment_content_login)
+        appBarConfiguration = AppBarConfiguration(setOf(R.id.nav_home, R.id.nav_second), drawerLayout)
+        setupActionBarWithNavController(navController, appBarConfiguration)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_settings -> true
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
-    private fun tryLogin(username: EditText?, password: EditText?, errorView: TextView?) {
-        if (username != null && password != null) {
-            val validateUser = userService.validateUser(username, password, errorView)
-            if (validateUser != null) {
-                invokeMainActivity(validateUser)
-            }
-        }
-
+    override fun onSupportNavigateUp(): Boolean {
+        val navController = findNavController(R.id.nav_host_fragment_content_login)
+        return navController.navigateUp(appBarConfiguration)
+                || super.onSupportNavigateUp()
     }
 
-    private fun invokeMainActivity(validateUser: Users) {
-        GlobalUser.user = validateUser
-        promptService.showSuccessToast(applicationContext, "Welcome ${validateUser.username}")
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
-        finish()
-    }
 }
