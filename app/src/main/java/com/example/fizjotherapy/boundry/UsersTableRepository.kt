@@ -35,7 +35,7 @@ class UsersTableRepository(val context: Context) {
                 put(COLUMN_USERNAME, user.username)
                 put(COLUMN_PASSWORD, user.password)
                 put(COLUMN_PHONE_NUMBER, user.phone)
-                put(COLUMN_BIRTHDAY, user.birthday.toString())
+                put(COLUMN_BIRTHDAY, user.birthday)
                 put(COLUMN_ROLE, user.rola)
                 db.insert(TABLE_NAME, null, this)
             }

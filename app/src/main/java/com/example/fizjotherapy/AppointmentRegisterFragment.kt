@@ -153,23 +153,18 @@ class AppointmentRegisterFragment : Fragment(), DatePickerDialog.OnDateSetListen
         val minute = c.get(Calendar.MINUTE)
 
         savedYear = year
-        savedMonth = month
+        savedMonth = month + 1
         savedDay = dayOfMonth
 
         TimePickerDialog(requireContext(), this, hour, minute, true).show()
     }
 
     override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
-        val inputFormat = DateTimeFormatter.ofPattern("dd-M-yyyy H:mm", Locale("pl"))
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale("pl"))
-        savedHour = hourOfDay
-        savedMinute = minute
+        val formattedDate = (savedYear.toString() + "-" + "%02d".format(savedMonth) + "-" + "%02d".format(savedDay) +
+                " " + "%02d".format(hourOfDay) + ":" + "%02d".format(minute) + ":" + "01")
 
-        val date = LocalDateTime.parse(
-            "$savedDay-$savedMonth-$savedYear $savedHour:$savedMinute",
-            inputFormat
-        )
-        savedAppointmentDate = formatter.format(date).toString()
+        savedAppointmentDate = LocalDateTime.parse(formattedDate, formatter).toString().replace("T", " ")
         editTextAppointmentDate.setText(savedAppointmentDate)
     }
 }

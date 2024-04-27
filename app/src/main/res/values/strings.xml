@@ -55,7 +55,7 @@
     <string name="forgot_pass">Zapomniałem hasła</string>
     <string name="without_log">Zaloguj jako gość</string>
     <string name="username_label">Nazwa użytkownika</string>
-    <string name="home">Strona Główna</string>
+    <string name="umow_wizyte">Umów wizytę</string>
     <string name="nav_header_title">Menu</string>
     <string name="zarejestruj_sie">Zarejestruj się</string>
     <string name="confirm_password">Potwierdź hasło</string>
@@ -72,4 +72,7 @@
     <string name="numer_telefonu">Numer telefonu</string>
     <string name="dane_checkbox">Użyj tych samych danych użytkownika</string>
     <string name="data_urodzenia">Data urodzenia</string>
+    <string name="lekarz_przyjmujacy">Lekarz przyjmujący:</string>
+    <string name="godzina_wizyty">Godzina wizyty:</string>
+    <string name="moje_wizyty">Moje wizyty</string>
 </resources>

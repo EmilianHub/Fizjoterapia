@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
         var navigationView = binding.navView
 
         navController = findNavController(R.id.nav_host_fragment_content_main)
-        appBarConfiguration = AppBarConfiguration(setOf(R.id.nav_home, R.id.nav_second), drawerLayout)
+        appBarConfiguration = AppBarConfiguration(setOf(R.id.nav_home, R.id.nav_moje_wizyty), drawerLayout)
         setupActionBarWithNavController(navController, appBarConfiguration)
         navigationView.setupWithNavController(navController)
     }

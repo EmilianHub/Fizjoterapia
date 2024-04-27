@@ -90,14 +90,14 @@ class DbHelper(val context: Context) :
                 put(UsersTableRepository.COLUMN_USERNAME, user.username)
                 put(UsersTableRepository.COLUMN_PASSWORD, AES.encrypt(user.password!!))
                 put(UsersTableRepository.COLUMN_PHONE_NUMBER, user.phone)
-                put(UsersTableRepository.COLUMN_BIRTHDAY, user.birthday.toString())
+                put(UsersTableRepository.COLUMN_BIRTHDAY, user.birthday)
                 put(UsersTableRepository.COLUMN_ROLE, user.rola)
                 db?.insert(UsersTableRepository.TABLE_NAME, null, this)
             }
         }
     }
 
-    fun onUpgradeUser(db: SQLiteDatabase?) {
+    private fun onUpgradeUser(db: SQLiteDatabase?) {
         val QUERY = "DROP TABLE IF EXISTS ${UsersTableRepository.TABLE_NAME}"
         db?.execSQL(QUERY)
         onCreate(db)
@@ -128,6 +128,7 @@ class DbHelper(val context: Context) :
                 "${AppointmentRepository.COLUMN_DATE} DATETIME," +
                 "${AppointmentRepository.COLUMN_PHONE_NUMBER} INTEGER," +
                 "${AppointmentRepository.COLUMN_BIRTHDATE} DATE," +
+                "${AppointmentRepository.COLUMN_LIFECYCLESTATE} TEXT," +
                 "FOREIGN KEY(${AppointmentRepository.COLUMN_PATIENT}) REFERENCES users(id)," +
                 "FOREIGN KEY(${AppointmentRepository.COLUMN_DOCTOR}) REFERENCES users(id)" +
                 ")"

@@ -35,7 +35,7 @@ class LoginActivity : AppCompatActivity() {
         drawerLayout = binding.drawerLayoutLogin
 
         navController = findNavController(R.id.nav_host_fragment_content_login)
-        appBarConfiguration = AppBarConfiguration(setOf(R.id.nav_home, R.id.nav_second), drawerLayout)
+        appBarConfiguration = AppBarConfiguration(setOf(R.id.nav_home, R.id.nav_moje_wizyty), drawerLayout)
         setupActionBarWithNavController(navController, appBarConfiguration)
     }
 
