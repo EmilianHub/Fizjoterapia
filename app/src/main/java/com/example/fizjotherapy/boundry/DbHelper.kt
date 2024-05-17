@@ -21,11 +21,13 @@ class DbHelper(val context: Context) :
     override fun onCreate(db: SQLiteDatabase?) {
         onCreateUser(db)
         onCreateAppoint(db)
+        onCreateNotifications(db)
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, p1: Int, p2: Int) {
         onUpgradeUser(db)
         onUpgradeAppoint(db)
+        onUpgradeNotifications(db)
     }
 
     fun onCreateUser(db: SQLiteDatabase?) {
@@ -54,7 +56,7 @@ class DbHelper(val context: Context) :
                 "    \"email\": \"some@gmail.com\",\n" +
                 "    \"phone\": 123456789,\n" +
                 "    \"birthday\": \"2000-11-10\",\n" +
-                "    \"rola\": \"admin\"\n" +
+                "    \"rola\": \"ADMIN\"\n" +
                 "  },\n" +
                 "  {\n" +
                 "    \"name\": \"Katarzyna Swierszcz\",\n" +
@@ -63,7 +65,16 @@ class DbHelper(val context: Context) :
                 "    \"email\": \"kasia@gmail.com\",\n" +
                 "    \"phone\": 123456789,\n" +
                 "    \"birthday\": \"2000-11-10\",\n" +
-                "    \"rola\": \"doc\"\n" +
+                "    \"rola\": \"DOC\"\n" +
+                "  },\n" +
+                "  {\n" +
+                "    \"name\": \"Wielga Obrzycka\",\n" +
+                "    \"username\": \"Wielga\",\n" +
+                "    \"password\": \"1234\",\n" +
+                "    \"email\": \"Wielga@gmail.com\",\n" +
+                "    \"phone\": 123456789,\n" +
+                "    \"birthday\": \"2001-11-10\",\n" +
+                "    \"rola\": \"DOC\"\n" +
                 "  },\n" +
                 "  {\n" +
                 "    \"name\": \"Grzegorz Karas\",\n" +
@@ -72,7 +83,7 @@ class DbHelper(val context: Context) :
                 "    \"email\": \"grzesiu@gmail.com\",\n" +
                 "    \"birthday\": \"2000-11-10\",\n" +
                 "    \"phone\": 123456789,\n" +
-                "    \"rola\": \"user\"\n" +
+                "    \"rola\": \"USER\"\n" +
                 "  }\n" +
                 "]"
         val mapper = jacksonObjectMapper()
@@ -88,10 +99,10 @@ class DbHelper(val context: Context) :
                 put(UsersTableRepository.COLUMN_EMAIL, user.email)
                 put(UsersTableRepository.COLUMN_NAME, user.name)
                 put(UsersTableRepository.COLUMN_USERNAME, user.username)
-                put(UsersTableRepository.COLUMN_PASSWORD, AES.encrypt(user.password!!))
+                put(UsersTableRepository.COLUMN_PASSWORD, AES.encrypt(user.password))
                 put(UsersTableRepository.COLUMN_PHONE_NUMBER, user.phone)
                 put(UsersTableRepository.COLUMN_BIRTHDAY, user.birthday)
-                put(UsersTableRepository.COLUMN_ROLE, user.rola)
+                put(UsersTableRepository.COLUMN_ROLE, user.rola.vName)
                 db?.insert(UsersTableRepository.TABLE_NAME, null, this)
             }
         }
@@ -100,8 +111,7 @@ class DbHelper(val context: Context) :
     private fun onUpgradeUser(db: SQLiteDatabase?) {
         val QUERY = "DROP TABLE IF EXISTS ${UsersTableRepository.TABLE_NAME}"
         db?.execSQL(QUERY)
-        onCreate(db)
-        initUsers(db)
+        onCreateUser(db)
     }
 
     private fun findByName(usernames : List<String>, db: SQLiteDatabase?) : List<String> {
@@ -138,6 +148,26 @@ class DbHelper(val context: Context) :
     private fun onUpgradeAppoint(db: SQLiteDatabase?) {
         val QUERY = "DROP TABLE IF EXISTS ${AppointmentRepository.TABLE_NAME}"
         db?.execSQL(QUERY)
-        onCreate(db)
+        onCreateAppoint(db)
+    }
+
+    private fun onCreateNotifications(db: SQLiteDatabase?) {
+        val QUERY_DEL = "DROP TABLE IF EXISTS ${NotificationRepository.TABLE_NAME}"
+        db?.execSQL(QUERY_DEL)
+        val QUERY = "CREATE TABLE ${NotificationRepository.TABLE_NAME}(" +
+                "${NotificationRepository.COLUMN_ID} INTEGER PRIMARY KEY," +
+                "${NotificationRepository.COLUMN_RECEIVER_ID} INTEGER," +
+                "${NotificationRepository.COLUMN_APPOINTMENT_ID} INTEGER," +
+                "${NotificationRepository.COLUMN_LIFE_CYCLE_STATE} TEXT," +
+                "FOREIGN KEY(${NotificationRepository.COLUMN_RECEIVER_ID}) REFERENCES users(id)," +
+                "FOREIGN KEY(${NotificationRepository.COLUMN_APPOINTMENT_ID}) REFERENCES appointments(id)" +
+                ")"
+        db?.execSQL(QUERY);
+    }
+
+    private fun onUpgradeNotifications(db: SQLiteDatabase?) {
+        val QUERY = "DROP TABLE IF EXISTS ${NotificationRepository.TABLE_NAME}"
+        db?.execSQL(QUERY)
+        onCreateNotifications(db)
     }
 }

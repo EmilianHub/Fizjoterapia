@@ -6,9 +6,9 @@ import java.util.Locale
 
 data class Wizyta (
     var id: Int?,
-    var pacjent: User,
+    var pacjent: User?,
     var imiePacjenta: String,
-    var lekarz: User,
+    var lekarz: User?,
     var dataWizyty: LocalDateTime,
     var numerTelefonu: Int,
     var dataUrodzenia: String,
@@ -31,14 +31,15 @@ data class Wizyta (
                 dataUrodzenia: String)
             : this(id, pacjent, imiePacjenta, lekarz, toLocalDateTime(dataWizyty), numerTelefonu, dataUrodzenia, LifeCycleState.ACTIVE)
 
-    constructor(id: Int?,
-                pacjent: User,
-                imiePacjenta: String,
-                lekarz: User,
-                dataWizyty: String,
-                numerTelefonu: Int,
-                dataUrodzenia: String,
-                lifeCycleState: LifeCycleState)
+    constructor(
+        id: Int?,
+        pacjent: User?,
+        imiePacjenta: String,
+        lekarz: User?,
+        dataWizyty: String,
+        numerTelefonu: Int,
+        dataUrodzenia: String,
+        lifeCycleState: LifeCycleState)
             : this(id, pacjent, imiePacjenta, lekarz, toLocalDateTime(dataWizyty), numerTelefonu, dataUrodzenia, lifeCycleState)
 
     constructor(id: Int?,
@@ -49,5 +50,5 @@ data class Wizyta (
                 numerTelefonu: Int,
                 dataUrodzenia: String,
                 lifeCycleState: String)
-            : this(id, pacjent, imiePacjenta, lekarz, toLocalDateTime(dataWizyty), numerTelefonu, dataUrodzenia, LifeCycleState.valueOf(lifeCycleState))
+            : this(id, pacjent, imiePacjenta, lekarz, toLocalDateTime(dataWizyty), numerTelefonu, dataUrodzenia, LifeCycleState.getByString(lifeCycleState))
 }

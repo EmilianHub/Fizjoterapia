@@ -19,9 +19,22 @@ class WizytaMapper {
         fun toDTO(result: Cursor): Wizyta {
             return Wizyta(
                 result.getInt(result.getColumnIndexOrThrow(COLUMN_ID)),
-                UserMapper.toPatientDTO(result),
+                UserMapper.toDTO(result, "pa"),
                 result.getString(result.getColumnIndexOrThrow(COLUMN_PATIENT_NAME)),
-                UserMapper.toDocDTO(result),
+                UserMapper.toDTO(result, "doc"),
+                result.getString(result.getColumnIndexOrThrow(COLUMN_DATE)),
+                result.getInt(result.getColumnIndexOrThrow(COLUMN_PHONE_NUMBER)),
+                result.getString(result.getColumnIndexOrThrow(COLUMN_BIRTHDATE)),
+                LifeCycleState.getByString(result.getString(result.getColumnIndexOrThrow(COLUMN_LIFECYCLESTATE)))
+            )
+        }
+
+        fun toSimpleDTO(result: Cursor): Wizyta {
+            return Wizyta(
+                result.getInt(result.getColumnIndexOrThrow(COLUMN_ID)),
+                null,
+                result.getString(result.getColumnIndexOrThrow(COLUMN_PATIENT_NAME)),
+                null,
                 result.getString(result.getColumnIndexOrThrow(COLUMN_DATE)),
                 result.getInt(result.getColumnIndexOrThrow(COLUMN_PHONE_NUMBER)),
                 result.getString(result.getColumnIndexOrThrow(COLUMN_BIRTHDATE)),

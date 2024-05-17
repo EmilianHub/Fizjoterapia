@@ -1,6 +1,6 @@
 package com.example.fizjotherapy
 
-import android.R
+import android.R.layout
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
@@ -16,11 +16,13 @@ import android.widget.EditText
 import android.widget.Spinner
 import android.widget.TimePicker
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.fizjotherapy.boundry.GlobalUser
 import com.example.fizjotherapy.control.AppointmentService
 import com.example.fizjotherapy.control.UsersService
 import com.example.fizjotherapy.databinding.FragmentAppointementRegisterBinding
 import com.example.fizjotherapy.dto.User
+import com.example.fizjotherapy.prompt.PromptService
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
@@ -37,6 +39,7 @@ class AppointmentRegisterFragment : Fragment(), DatePickerDialog.OnDateSetListen
 
     private lateinit var usersService: UsersService
     private lateinit var appointmentService: AppointmentService
+    private lateinit var promptService: PromptService
     private lateinit var doctors: List<User>
 
     private lateinit var editTextFirstName: EditText
@@ -50,10 +53,9 @@ class AppointmentRegisterFragment : Fragment(), DatePickerDialog.OnDateSetListen
     private var savedYear: Int? = null
     private var savedMonth: Int? = null
     private var savedDay: Int? = null
-    private var savedHour: Int? = null
-    private var savedMinute: Int? = null
 
     private var savedAppointmentDate: String? = null
+    private var appointmentLocalDateTime: LocalDateTime? = null
     private var selectedDocName: String? = null
 
     override fun onCreateView(
@@ -62,8 +64,9 @@ class AppointmentRegisterFragment : Fragment(), DatePickerDialog.OnDateSetListen
     ): View {
 
         _binding = FragmentAppointementRegisterBinding.inflate(inflater, container, false)
-        usersService = UsersService(requireContext())
-        appointmentService = AppointmentService(requireContext())
+        usersService = UsersService(requireActivity())
+        appointmentService = AppointmentService(requireActivity())
+        promptService = PromptService(requireActivity())
 
         return binding.root
     }
@@ -84,14 +87,29 @@ class AppointmentRegisterFragment : Fragment(), DatePickerDialog.OnDateSetListen
         openCalendarView()
 
         registerButton.setOnClickListener {
-            appointmentService.create(
-                editTextFirstName,
-                doctors,
-                selectedDocName,
-                editTextPhoneNumber,
-                editTextDateOfBirth,
-                savedAppointmentDate)
+            createAppointment()
         }
+    }
+
+    private fun createAppointment() {
+        val isCreated = appointmentService.create(
+            editTextFirstName,
+            doctors,
+            selectedDocName,
+            editTextPhoneNumber,
+            editTextDateOfBirth,
+            savedAppointmentDate
+        )
+        if (isCreated) {
+            promptService.buildAlertDialog("Wizyta została umówiona, czy przekierować do widoku wizyt?", {navigateToCalendar()}, {})
+        } else {
+            promptService.showFailToast("Coś poszło nie tak spróbuj ponownie")
+        }
+    }
+
+    private fun navigateToCalendar() {
+        val bundle = Bundle().apply { putSerializable("date", appointmentLocalDateTime) }
+        findNavController().navigate(R.id.nav_moje_wizyty, bundle)
     }
 
     private fun checkboxState() {
@@ -109,8 +127,8 @@ class AppointmentRegisterFragment : Fragment(), DatePickerDialog.OnDateSetListen
     private fun intDocsSpinner() {
         doctors = usersService.findAllDoctorNames()
         val doctorNames = doctors.map { doc -> doc.name }
-        val arrayAdapter = ArrayAdapter(requireContext(), R.layout.simple_spinner_item, doctorNames)
-        arrayAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item)
+        val arrayAdapter = ArrayAdapter(requireContext(), layout.simple_spinner_item, doctorNames)
+        arrayAdapter.setDropDownViewResource(layout.simple_spinner_dropdown_item)
         docSpinner.adapter = arrayAdapter
 
         docSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -164,7 +182,8 @@ class AppointmentRegisterFragment : Fragment(), DatePickerDialog.OnDateSetListen
         val formattedDate = (savedYear.toString() + "-" + "%02d".format(savedMonth) + "-" + "%02d".format(savedDay) +
                 " " + "%02d".format(hourOfDay) + ":" + "%02d".format(minute) + ":" + "01")
 
-        savedAppointmentDate = LocalDateTime.parse(formattedDate, formatter).toString().replace("T", " ")
+        appointmentLocalDateTime = LocalDateTime.parse(formattedDate, formatter)
+        savedAppointmentDate = appointmentLocalDateTime.toString().replace("T", " ")
         editTextAppointmentDate.setText(savedAppointmentDate)
     }
 }

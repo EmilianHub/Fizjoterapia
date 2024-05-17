@@ -21,7 +21,7 @@ import com.example.fizjotherapy.prompt.PromptService
 class LoginFragment : Fragment() {
 
     companion object {
-        fun newInstance() = RegisterFragment()
+        fun newInstance() = LoginFragment()
     }
 
     private lateinit var userService: UsersService
@@ -34,8 +34,8 @@ class LoginFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        userService = UsersService(requireContext())
-        promptService = PromptService(requireContext())
+        userService = UsersService(requireActivity())
+        promptService = PromptService(requireActivity())
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
 
         return binding.root

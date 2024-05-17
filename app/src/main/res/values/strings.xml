@@ -75,4 +75,6 @@
     <string name="lekarz_przyjmujacy">Lekarz przyjmujący:</string>
     <string name="godzina_wizyty">Godzina wizyty:</string>
     <string name="moje_wizyty">Moje wizyty</string>
+    <string name="rejestracja_wizyty">Rejestracja wizyty</string>
+    <string name="wybierz_role">Wybierz role</string>
 </resources>

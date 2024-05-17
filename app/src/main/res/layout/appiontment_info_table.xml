@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/appoint_info_table"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -11,62 +13,78 @@
         android:layout_height="wrap_content">
 
         <TableRow
+            android:id="@+id/appointmentRow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:layout_gravity="center">
 
-            <TextView
-                android:id="@+id/doc_name_column"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/lekarz_przyjmujacy"
-                android:inputType="none"
-                android:layout_weight="0.5"
-                android:textSize="17sp"
-                android:textStyle="bold"
-                android:gravity="start"/>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="391dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/doc_name_row"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:hint="Ewa"
-                android:layout_weight="0.5"
-                android:layout_marginStart="5sp"
-                android:textSize="17sp"
-                android:inputType="none"
-                android:layout_gravity="end"
-                android:gravity="center"/>
-        </TableRow>
+                <TextView
+                    android:id="@+id/doc_name_column"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="start"
+                    android:inputType="none"
+                    android:text="@string/lekarz_przyjmujacy"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
+                <TextView
+                    android:id="@+id/doc_name_row"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginTop="8dp"
+                    android:layout_weight="0.5"
+                    android:gravity="center"
+                    android:hint="Ewa"
+                    android:inputType="none"
+                    android:textSize="17sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.714"
+                    app:layout_constraintStart_toEndOf="@+id/hour_column"
+                    app:layout_constraintTop_toBottomOf="@+id/hour_row" />
 
-        <TableRow
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:gravity="center">
+                <TextView
+                    android:id="@+id/hour_column"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="0.5"
+                    android:inputType="none"
+                    android:text="@string/godzina_wizyty"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/doc_name_column"
+                    app:layout_constraintVertical_bias="1.0" />
 
-            <TextView
-                android:id="@+id/hour_column"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:inputType="none"
-                android:textSize="17sp"
-                android:layout_weight="0.5"
-                android:textStyle="bold"
-                android:text="@string/godzina_wizyty" />
-
-            <TextView
-                android:id="@+id/hour_row"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:inputType="none"
-                android:layout_weight="0.5"
-                android:textSize="17sp"
-                android:layout_gravity="end"
-                android:gravity="center"
-                android:hint="10:50" />
+                <TextView
+                    android:id="@+id/hour_row"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_weight="0.5"
+                    android:gravity="center"
+                    android:hint="10:50"
+                    android:inputType="none"
+                    android:textSize="17sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.654"
+                    app:layout_constraintStart_toEndOf="@+id/doc_name_column"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </TableRow>
     </TableLayout>
 </RelativeLayout>

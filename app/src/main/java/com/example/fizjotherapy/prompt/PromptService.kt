@@ -2,13 +2,12 @@ package com.example.fizjotherapy.prompt
 
 import android.app.Activity
 import android.app.AlertDialog
-import android.content.Context
 import android.graphics.Color
 import android.widget.TextView
 import android.widget.Toast
 import java.util.concurrent.Callable
 
-class PromptService(private val context: Context) {
+class PromptService(private val activity: Activity) {
 
     fun setErrorTextView(errorView: TextView, text: String?, color: String?, visible: Int) {
         errorView.text = text
@@ -17,35 +16,26 @@ class PromptService(private val context: Context) {
     }
 
     fun showSuccessToast(message: String?) {
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
     }
 
     fun showFailToast(message: String?) {
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
     }
 
     fun buildAlertDialog(
-        activity: Activity,
         message: String?,
-        positiveAction: Callable<Void?>,
-        negative: Callable<Void?>
+        positiveAction: () -> Unit,
+        negative: () -> Unit
     ) {
         val builder: AlertDialog.Builder = AlertDialog.Builder(activity)
         val alertDialog: AlertDialog = builder.setMessage(message)
             .setCancelable(false)
             .setPositiveButton("Yes") { _, _ ->
-                try {
-                    positiveAction.call()
-                } catch (e: Exception) {
-                    throw RuntimeException(e)
-                }
+                positiveAction()
             }
             .setNegativeButton("No") { _, _ ->
-                try {
-                    negative.call()
-                } catch (e: Exception) {
-                    throw RuntimeException(e)
-                }
+                negative()
             }.create()
         alertDialog.show()
     }

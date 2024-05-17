@@ -2,15 +2,9 @@ package com.example.fizjotherapy.boundry
 
 import android.content.ContentValues
 import android.content.Context
-import android.database.sqlite.SQLiteDatabase
-import android.database.sqlite.SQLiteOpenHelper
-import android.text.TextUtils
 import com.example.fizjotherapy.dto.Rola
 import com.example.fizjotherapy.dto.User
-import com.example.fizjotherapy.encrypter.AES
 import com.example.fizjotherapy.mapper.UserMapper
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
 
 class UsersTableRepository(val context: Context) {
     companion object {
@@ -27,6 +21,7 @@ class UsersTableRepository(val context: Context) {
 
     fun create(users: List<User>): Boolean {
         val db = DbHelper(context).writableDatabase
+        var result: Long = 0
         db.beginTransaction()
         ContentValues().apply {
             users.forEach {user ->
@@ -36,13 +31,13 @@ class UsersTableRepository(val context: Context) {
                 put(COLUMN_PASSWORD, user.password)
                 put(COLUMN_PHONE_NUMBER, user.phone)
                 put(COLUMN_BIRTHDAY, user.birthday)
-                put(COLUMN_ROLE, user.rola)
-                db.insert(TABLE_NAME, null, this)
+                put(COLUMN_ROLE, user.rola.vName)
+                result = db.insert(TABLE_NAME, null, this)
             }
         }
         db.setTransactionSuccessful()
         db.endTransaction()
-        return true
+        return result > 0
     }
 
     fun create(user: User): Boolean {
@@ -54,14 +49,14 @@ class UsersTableRepository(val context: Context) {
                 put(COLUMN_PASSWORD, user.password)
                 put(COLUMN_PHONE_NUMBER, user.phone)
                 put(COLUMN_BIRTHDAY, user.birthday)
-                put(COLUMN_ROLE, user.rola)
+                put(COLUMN_ROLE, user.rola.vName)
 
         }
         db.beginTransaction()
-        db.insert(TABLE_NAME, null, values)
+        val result = db.insert(TABLE_NAME, null, values)
         db.setTransactionSuccessful()
         db.endTransaction()
-        return true
+        return result > 0
     }
 
     fun findByUsernameAndPassword(username: String, password: String): User? {
@@ -81,15 +76,17 @@ class UsersTableRepository(val context: Context) {
         val db = DbHelper(context).readableDatabase
         val QUERY = "SELECT * FROM $TABLE_NAME WHERE lower($COLUMN_USERNAME) = '${login.lowercase()}' OR lower($COLUMN_EMAIL) = '${login.lowercase()}'"
         val result = db.rawQuery(QUERY, null)
-
-        return if (result.moveToFirst()) {
-            return UserMapper.toDTO(result)
-        } else null
+        var user: User? = null
+        if (result.moveToFirst()) {
+            user = UserMapper.toDTO(result)
+        }
+        result.close()
+        return user
     }
 
     fun findAllDocs() : List<User>{
         val db = DbHelper(context).readableDatabase
-        val QUERY = "SELECT * FROM $TABLE_NAME WHERE lower($COLUMN_ROLE) = lower('${Rola.DOC.rola}')"
+        val QUERY = "SELECT * FROM $TABLE_NAME WHERE lower($COLUMN_ROLE) = lower('${Rola.DOC.vName}')"
         val result = db.rawQuery(QUERY, null)
 
         val doctors = mutableListOf<User>()
@@ -97,6 +94,7 @@ class UsersTableRepository(val context: Context) {
         while (result.moveToNext()) {
             doctors.add(UserMapper.toDTO(result))
         }
+        result.close()
         return doctors
     }
 }

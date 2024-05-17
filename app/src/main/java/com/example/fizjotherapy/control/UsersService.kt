@@ -1,5 +1,6 @@
 package com.example.fizjotherapy.control;
 
+import android.app.Activity
 import android.content.Context
 import android.util.Log
 import android.view.View
@@ -13,10 +14,10 @@ import com.example.fizjotherapy.encrypter.AES
 import com.example.fizjotherapy.prompt.PromptService
 import java.util.regex.Pattern
 
-class UsersService(val context: Context) {
+class UsersService(private val activity: Activity) {
 
-    private var userRepository: UsersTableRepository = UsersTableRepository(context)
-    private var promptViewService: PromptService = PromptService(context)
+    private var userRepository: UsersTableRepository = UsersTableRepository(activity)
+    private var promptViewService: PromptService = PromptService(activity)
 
     private val passwordSyntax =
         Pattern.compile("^(?=.*[0-9!@#$%^&+=])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,}$")
@@ -68,12 +69,26 @@ class UsersService(val context: Context) {
                 null,
                 name,
                 username!!,
-                encryptedPassword,
-                email,
+                encryptedPassword!!,
+                email!!,
                 phone.toInt(),
                 birthdate,
-                Rola.USER.rola
+                Rola.USER
             )
+            return userRepository.create(user)
+        } catch (e: java.lang.Exception) {
+            Log.d(
+                "UserService",
+                "Error occurred while registering user: " + e.message
+            )
+        }
+        return false
+    }
+
+    fun create(user: User): Boolean {
+        try {
+            val encryptedPassword: String? = AES.encrypt(user.password)
+            user.password = encryptedPassword!!
             return userRepository.create(user)
         } catch (e: java.lang.Exception) {
             Log.d(
@@ -90,15 +105,15 @@ class UsersService(val context: Context) {
     ): Boolean {
         var messageText = ""
         if (password.isBlank()) {
-            messageText = context.getString(R.string.empty_password_text)
+            messageText = activity.getString(R.string.empty_password_text)
             promptViewService.setErrorTextView(passwordError!!, messageText, "red", View.VISIBLE)
             return false
         } else if (password.length < 8) {
-            messageText = context.getString(R.string.short_password_text)
+            messageText = activity.getString(R.string.short_password_text)
             promptViewService.setErrorTextView(passwordError!!, messageText, "red", View.VISIBLE)
             return false
         } else if (!passwordSyntax.matcher(password).matches()) {
-            messageText = context.getString(R.string.strong_password_text)
+            messageText = activity.getString(R.string.strong_password_text)
             promptViewService.setErrorTextView(passwordError!!, messageText, "red", View.VISIBLE)
             return false
         }
@@ -110,11 +125,11 @@ class UsersService(val context: Context) {
     fun verifyEmailSyntax(emailError: TextView, email: String): Boolean {
         var messageText = ""
         if (email.isBlank()) {
-            messageText = context.getString(R.string.email_error_text)
+            messageText = activity.getString(R.string.email_error_text)
             promptViewService.setErrorTextView(emailError, messageText, "red", View.VISIBLE)
             return false
         } else if (!emailSyntax.matcher(email).matches()) {
-            messageText = context.getString(R.string.incorrect_email_error_text)
+            messageText = activity.getString(R.string.incorrect_email_error_text)
             promptViewService.setErrorTextView(emailError, messageText, "red", View.VISIBLE)
             return false
         }
@@ -129,7 +144,7 @@ class UsersService(val context: Context) {
     ): Boolean {
         var messageText = ""
         if (retypePassword.isBlank()) {
-            messageText = context.getString(R.string.empty_filed_text)
+            messageText = activity.getString(R.string.empty_filed_text)
             promptViewService.setErrorTextView(
                 retypePasswordError,
                 messageText,
@@ -138,7 +153,7 @@ class UsersService(val context: Context) {
             )
             return false
         } else if (retypePassword != password) {
-            messageText = context.getString(R.string.not_matching_password)
+            messageText = activity.getString(R.string.not_matching_password)
             promptViewService.setErrorTextView(
                 retypePasswordError,
                 messageText,
@@ -154,11 +169,11 @@ class UsersService(val context: Context) {
     fun verifyUsernameLength(usernameError: TextView, username: String): Boolean {
         var messageText = ""
         if (username.isBlank()) {
-            messageText = context.getString(R.string.empty_filed_text)
+            messageText = activity.getString(R.string.empty_filed_text)
             promptViewService.setErrorTextView(usernameError, messageText, "red", View.VISIBLE)
             return false
         } else if (username.length < 3) {
-            messageText = context.getString(R.string.username_requirements)
+            messageText = activity.getString(R.string.username_requirements)
             promptViewService.setErrorTextView(usernameError, messageText, "red", View.VISIBLE)
             return false
         }

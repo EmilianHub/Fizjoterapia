@@ -27,29 +27,16 @@ class UserMapper {
             )
         }
 
-        fun toPatientDTO(result: Cursor) : User {
+        fun toDTO(result: Cursor, prefix: String) : User {
             return User(
-                result.getInt(result.getColumnIndexOrThrow("pa$COLUMN_ID")),
-                result.getString(result.getColumnIndexOrThrow("pa$COLUMN_NAME")),
-                result.getString(result.getColumnIndexOrThrow("pa$COLUMN_USERNAME")),
-                result.getString(result.getColumnIndexOrThrow("pa$COLUMN_PASSWORD")),
-                result.getString(result.getColumnIndexOrThrow("pa$COLUMN_EMAIL")),
-                result.getInt(result.getColumnIndexOrThrow("pa$COLUMN_PHONE_NUMBER")),
-                result.getString(result.getColumnIndexOrThrow("pa$COLUMN_BIRTHDAY")),
-                result.getString(result.getColumnIndexOrThrow("pa$COLUMN_ROLE"))
-            )
-        }
-
-        fun toDocDTO(result: Cursor): User {
-            return User(
-                result.getInt(result.getColumnIndexOrThrow("doc$COLUMN_ID")),
-                result.getString(result.getColumnIndexOrThrow("doc$COLUMN_NAME")),
-                result.getString(result.getColumnIndexOrThrow("doc$COLUMN_USERNAME")),
-                result.getString(result.getColumnIndexOrThrow("doc$COLUMN_PASSWORD")),
-                result.getString(result.getColumnIndexOrThrow("doc$COLUMN_EMAIL")),
-                result.getInt(result.getColumnIndexOrThrow("doc$COLUMN_PHONE_NUMBER")),
-                result.getString(result.getColumnIndexOrThrow("doc$COLUMN_BIRTHDAY")),
-                result.getString(result.getColumnIndexOrThrow("doc$COLUMN_ROLE"))
+                result.getInt(result.getColumnIndexOrThrow("$prefix$COLUMN_ID")),
+                result.getString(result.getColumnIndexOrThrow("$prefix$COLUMN_NAME")),
+                result.getString(result.getColumnIndexOrThrow("$prefix$COLUMN_USERNAME")),
+                result.getString(result.getColumnIndexOrThrow("$prefix$COLUMN_PASSWORD")),
+                result.getString(result.getColumnIndexOrThrow("$prefix$COLUMN_EMAIL")),
+                result.getInt(result.getColumnIndexOrThrow("$prefix$COLUMN_PHONE_NUMBER")),
+                result.getString(result.getColumnIndexOrThrow("$prefix$COLUMN_BIRTHDAY")),
+                result.getString(result.getColumnIndexOrThrow("$prefix$COLUMN_ROLE"))
             )
         }
     }

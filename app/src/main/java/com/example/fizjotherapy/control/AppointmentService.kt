@@ -1,6 +1,6 @@
 package com.example.fizjotherapy.control
 
-import android.content.Context
+import android.app.Activity
 import android.widget.EditText
 import com.example.fizjotherapy.boundry.AppointmentRepository
 import com.example.fizjotherapy.boundry.GlobalUser
@@ -8,13 +8,13 @@ import com.example.fizjotherapy.dto.User
 import com.example.fizjotherapy.dto.Wizyta
 import com.example.fizjotherapy.prompt.PromptService
 import java.time.LocalDate
-import java.time.ZoneId
-import java.util.Locale
+import java.util.stream.Collectors
 
-class AppointmentService(val context: Context) {
+class AppointmentService(private val activity: Activity) {
 
-    private var appointmentRepository = AppointmentRepository(context)
-    private var promptService = PromptService(context)
+    private var appointmentRepository = AppointmentRepository(activity)
+    private var notificationService = NotificationService(activity)
+    private var promptService = PromptService(activity)
 
     fun create(
         editTextFirstName: EditText,
@@ -23,7 +23,7 @@ class AppointmentService(val context: Context) {
         editTextPhoneNumber: EditText,
         editTextDateOfBirth: EditText,
         savedAppointmentDate: String?
-    ) {
+    ): Boolean {
         val wizyta = Wizyta(
             null,
             GlobalUser.user,
@@ -36,10 +36,9 @@ class AppointmentService(val context: Context) {
 
         val isCreated = appointmentRepository.create(wizyta)
         if (isCreated) {
-            promptService.showSuccessToast("Wizyta została umówiona")
-        } else {
-            promptService.showFailToast("Coś poszło nie tak spróbuj ponownie")
+            notificationService.create(wizyta)
         }
+        return isCreated
     }
 
     private fun findDoctorByName(doctors: List<User>, selectedDocName: String): User? {
@@ -50,7 +49,17 @@ class AppointmentService(val context: Context) {
         return appointmentRepository.findAllUserAppointments(GlobalUser.user)
     }
 
-    fun findAllUserAppointmentsByAppointDate(): Map<LocalDate, List<Wizyta>> {
-        return appointmentRepository.findAllUserAppointments(GlobalUser.user).groupBy { it -> LocalDate.from(it.dataWizyty) }
+    fun findAllUserAppointmentsByAppointDate(): Map<LocalDate, MutableList<Wizyta>> {
+        return appointmentRepository.findAllUserAppointments(GlobalUser.user).groupByTo(mutableMapOf()) { LocalDate.from(it.dataWizyty) }
+    }
+
+    fun delete(selectedAppointments: MutableSet<Wizyta>): Boolean {
+        val isDeleted = appointmentRepository.delete(selectedAppointments.map {wizyta -> wizyta.id }.toCollection(
+            mutableSetOf()
+        ))
+        if (isDeleted) {
+            notificationService.create(selectedAppointments)
+        }
+        return isDeleted
     }
 }

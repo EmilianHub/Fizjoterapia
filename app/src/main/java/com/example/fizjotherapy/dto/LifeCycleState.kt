@@ -1,7 +1,7 @@
 package com.example.fizjotherapy.dto
 
 enum class LifeCycleState(val state: String) {
-    ACTIVE("A"), CANCELD("C");
+    ACTIVE("A"), CANCELED("C");
 
     companion object {
         fun getByString(state: String): LifeCycleState {
